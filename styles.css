@@ -94,6 +94,11 @@ body {
   color: #b91c1c;
 }
 
+.game__timer {
+  margin: 0.25rem 0 0;
+  color: #475569;
+}
+
 .game__history-title {
   margin: 1.25rem 0 0.5rem;
   font-size: 1.1rem;

@@ -1,4 +1,5 @@
 import { createDigitValidator, isValidGuess } from '../game/validate.js';
+import { elapsedMs, formatDuration } from '../game/time.js';
 import type {
   Code,
   HistoryEntry,
@@ -55,6 +56,26 @@ export const createGameScreen = (
     `Длина кода: ${length}, ` + `система счисления: ${BASE_CAPTIONS[base]}`,
   );
 
+  const timer = el('p', 'game__timer');
+
+  const showTime = (): void => {
+    const finished = state.status === 'won' ? state.finishedAt : Date.now();
+    timer.textContent = `Время: ${formatDuration(
+      elapsedMs(state.startedAt, finished),
+    )}`;
+  };
+  showTime();
+
+  if (state.status === 'playing') {
+    const timerId = setInterval(() => {
+      if (!document.contains(section)) {
+        clearInterval(timerId);
+        return;
+      }
+      showTime();
+    }, 1_000);
+  }
+
   let guess: Code = '';
 
   const input = el('input', 'game__input');
@@ -106,7 +127,7 @@ export const createGameScreen = (
     onGuess(current);
   });
 
-  section.append(info, form, error);
+  section.append(info, timer, form, error);
 
   if (state.history.length > 0) {
     const heading = el('h2', 'game__history-title', 'История попыток');
