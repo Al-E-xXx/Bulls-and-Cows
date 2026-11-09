@@ -1,9 +1,28 @@
+import { DIGIT_ALPHABET } from './constants';
 import type { Code, NumericBase } from './types';
 
+const pickIndex = (random: () => number, poolSize: number): number =>
+  Math.min(poolSize - 1, Math.floor(random() * poolSize));
+
+const pickDigits = (
+  pool: readonly string[],
+  length: number,
+  random: () => number,
+): string => {
+  if (length === 0) {
+    return '';
+  }
+  const index = pickIndex(random, pool.length);
+  const digit = pool[index] as string;
+  const rest = [...pool.slice(0, index), ...pool.slice(index + 1)];
+  return digit + pickDigits(rest, length - 1, random);
+};
+
 export const generateSecret = (
-  _length: number,
-  _base: NumericBase,
-  _random: () => number = Math.random,
+  length: number,
+  base: NumericBase,
+  random: () => number = Math.random,
 ): Code => {
-  throw new Error('not implemented');
+  const alphabet = Array.from(DIGIT_ALPHABET.slice(0, base));
+  return pickDigits(alphabet, length, random);
 };
