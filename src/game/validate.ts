@@ -1,5 +1,5 @@
 import { DIGIT_ALPHABET } from './constants';
-import type { NumericBase } from './types';
+import type { Code, NumericBase } from './types';
 
 export const createDigitValidator =
   (base: NumericBase): ((symbol: string) => string | undefined) =>
@@ -10,3 +10,11 @@ export const createDigitValidator =
       ? normalized
       : undefined;
   };
+
+export const isValidGuess = (
+  _guess: Code,
+  _length: number,
+  _base: NumericBase,
+): boolean => {
+  throw new Error('not implemented');
+};
