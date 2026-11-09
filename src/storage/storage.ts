@@ -1,3 +1,4 @@
+import { safeParseRecords } from '../game/records';
 import type { RecordEntry, RecordsTableKey } from '../game/types';
 
 export interface KeyValueStore {
@@ -5,21 +6,31 @@ export interface KeyValueStore {
   setItem(key: string, value: string): void;
 }
 
-export const makeRecordsKey = (_key: RecordsTableKey): string => {
-  throw new Error('not implemented');
+export const makeRecordsKey = (key: RecordsTableKey): string =>
+  `bc:records:${key.length}:${key.base}`;
+
+const readItem = (store: KeyValueStore, key: string): string | null => {
+  try {
+    return store.getItem(key);
+  } catch {
+    return null;
+  }
 };
 
 export const loadRecords = (
-  _store: KeyValueStore,
-  _key: RecordsTableKey,
-): readonly RecordEntry[] => {
-  throw new Error('not implemented');
-};
+  store: KeyValueStore,
+  key: RecordsTableKey,
+): readonly RecordEntry[] =>
+  safeParseRecords(readItem(store, makeRecordsKey(key)));
 
 export const saveRecords = (
-  _store: KeyValueStore,
-  _key: RecordsTableKey,
-  _records: readonly RecordEntry[],
+  store: KeyValueStore,
+  key: RecordsTableKey,
+  records: readonly RecordEntry[],
 ): void => {
-  throw new Error('not implemented');
+  try {
+    store.setItem(makeRecordsKey(key), JSON.stringify(records));
+  } catch {
+    // storage unavailable: play on without persisting
+  }
 };
