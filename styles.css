@@ -217,6 +217,63 @@ body {
   transform: translateY(1px);
 }
 
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.modal__dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(32rem, 100%);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100dvh - 2rem);
+  background: #fff;
+  border-radius: 0.6rem;
+  box-shadow: 0 1rem 2.5rem rgba(15, 23, 42, 0.35);
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.modal__close {
+  padding: 0.15rem 0.5rem;
+  border: none;
+  border-radius: 0.4rem;
+  background: transparent;
+  color: #475569;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal__close:hover {
+  background: #f1f5f9;
+  color: #1f2937;
+}
+
+.modal__body {
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
 :focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
@@ -250,5 +307,17 @@ body {
   .records__table td {
     padding: 0.3rem 0.35rem;
     font-size: 0.95rem;
+  }
+
+  .modal {
+    padding: 0.5rem;
+  }
+
+  .modal__header {
+    padding: 0.7rem 0.9rem;
+  }
+
+  .modal__body {
+    padding: 0.9rem;
   }
 }
