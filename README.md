@@ -54,6 +54,14 @@ npx http-server .
 python3 -m http.server
 ```
 
+## Деплой
+
+Автоматический деплой на GitHub Pages настроен через GitHub Actions
+(`.github/workflows/deploy-pages.yml`): каждый `push` в ветку `bulls-and-cows`
+прогоняет линтер и тесты, собирает `tsc` и публикует файлы `index.html`,
+`styles.css` и каталог `dist/` на <https://al-exxx.github.io/Bulls-and-Cows/>.
+Источник публикации в настройках Pages — «GitHub Actions».
+
 ## Скрипты
 
 | Команда                | Что делает                             |
@@ -70,6 +78,7 @@ python3 -m http.server
 ├── index.html          — пустой <body> + <script type="module"> (UI генерируется кодом)
 ├── styles.css          — стили и адаптивность (media-запросы)
 ├── DESIGN.md           — архитектура, структуры данных, алгоритмы и Big O
+├── .github/workflows/  — CI: тесты и автодеплой на GitHub Pages при push
 └── src/
     ├── main.ts         — контроллер: состояние игры + полный ре-рендер экранов
     ├── game/           — чистое ядро (без DOM и localStorage)
