@@ -40,7 +40,7 @@ const createOption = (
 export const createSettingsScreen = (
   initial: RoundSettings,
   onPlay: (settings: RoundSettings) => void,
-): HTMLElement => {
+): HTMLFormElement => {
   let current: RoundSettings = {
     length: clampLength(initial.length, initial.base),
     base: initial.base,

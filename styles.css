@@ -18,7 +18,7 @@ body {
 
 .app__header,
 .app__main {
-  max-width: 40rem;
+  max-width: 48rem;
   margin-inline: auto;
   padding-inline: 1rem;
 }
@@ -27,9 +27,49 @@ body {
   padding-block: 1.5rem 0.75rem;
 }
 
-.app__title {
-  margin: 0;
-  font-size: 1.6rem;
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.menu__play,
+.menu__new,
+.menu__records {
+  padding: 0.5rem 1.6rem;
+  border: 1px solid #2563eb;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #2563eb;
+  font: inherit;
+  cursor: pointer;
+}
+
+.menu__play {
+  background: #2563eb;
+  color: #fff;
+}
+
+.menu__play:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.menu__new:hover:not(:disabled),
+.menu__records:hover:not(:disabled) {
+  background: #eff6ff;
+}
+
+.menu__play:active:not(:disabled),
+.menu__new:active:not(:disabled),
+.menu__records:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.menu button:disabled {
+  border-color: #94a3b8;
+  background: #e2e8f0;
+  color: #64748b;
+  cursor: default;
 }
 
 .app__main {
@@ -274,6 +314,23 @@ body {
   overflow-y: auto;
 }
 
+.modal__text {
+  margin: 0;
+  color: #334155;
+}
+
+.modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.modal__actions > button {
+  margin: 0;
+  align-self: center;
+}
+
 :focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
@@ -289,8 +346,10 @@ body {
     padding-block: 1rem 0.5rem;
   }
 
-  .app__title {
-    font-size: 1.35rem;
+  .menu__play,
+  .menu__new,
+  .menu__records {
+    padding: 0.4rem 1rem;
   }
 
   .settings,

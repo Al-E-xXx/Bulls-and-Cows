@@ -18,6 +18,8 @@ import {
 } from './storage/storage.js';
 import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
+import { createMenu } from './ui/menu.js';
+import { createModal, type ModalController } from './ui/modal.js';
 import { createRecordsSection } from './ui/records.js';
 import { createSettingsScreen } from './ui/settings.js';
 
@@ -31,16 +33,30 @@ const recordsStore: KeyValueStore = {
 
 let gameState: GameState = { status: 'idle', settings: DEFAULT_SETTINGS };
 
+const header = el('header', 'app__header');
 const main = el('main', 'app__main');
 
-const createHeader = (): HTMLElement => {
-  const header = el('header', 'app__header');
-  header.append(el('h1', 'app__title', 'Быки и коровы'));
-  return header;
-};
+let settingsForm: HTMLFormElement | undefined;
+let currentModal: ModalController | undefined;
 
 const isRound = (state: GameState): state is RoundState =>
   state.status !== 'idle';
+
+const closeModal = (): void => {
+  currentModal?.element.remove();
+  currentModal = undefined;
+};
+
+const openModal = (
+  title: string,
+  body: readonly Node[],
+  onClose: () => void,
+): void => {
+  closeModal();
+  currentModal = createModal({ title, body, onClose });
+  document.body.append(currentModal.element);
+  currentModal.focus();
+};
 
 const persistWinRecord = (state: RoundState): void => {
   if (state.status !== 'won') {
@@ -64,9 +80,19 @@ const persistWinRecord = (state: RoundState): void => {
 };
 
 const render = (): void => {
+  clearNode(header);
   clearNode(main);
+  settingsForm = undefined;
+  header.append(
+    createMenu(isRound(gameState), {
+      onPlay: handleMenuPlay,
+      onNewGame: handleNewGame,
+      onRecords: handleRecords,
+    }),
+  );
   if (gameState.status === 'idle') {
-    main.append(createSettingsScreen(gameState.settings, handlePlay));
+    settingsForm = createSettingsScreen(gameState.settings, handlePlay);
+    main.append(settingsForm);
   } else {
     main.append(
       createGameScreen(gameState, handleGuess, handleNewGame),
@@ -78,6 +104,12 @@ const render = (): void => {
   }
 };
 
+const resetToIdle = (): void => {
+  closeModal();
+  gameState = { status: 'idle', settings: gameState.settings };
+  render();
+};
+
 const handlePlay = (settings: RoundSettings): void => {
   gameState = startRound(
     settings,
@@ -85,6 +117,42 @@ const handlePlay = (settings: RoundSettings): void => {
     Date.now(),
   );
   render();
+};
+
+const handleMenuPlay = (): void => {
+  settingsForm?.requestSubmit();
+};
+
+const handleNewGame = (): void => {
+  if (gameState.status !== 'playing') {
+    resetToIdle();
+    return;
+  }
+  const yes = el('button', 'settings__play', 'Да, новая игра');
+  yes.type = 'button';
+  yes.addEventListener('click', resetToIdle);
+  const no = el('button', 'game__new', 'Отмена');
+  no.type = 'button';
+  no.addEventListener('click', closeModal);
+  const actions = el('div', 'modal__actions');
+  actions.append(yes, no);
+  openModal(
+    'Раунд будет сброшен',
+    [
+      el('p', 'modal__text', 'Текущая игра не сохранится. Начать новую?'),
+      actions,
+    ],
+    closeModal,
+  );
+};
+
+const handleRecords = (): void => {
+  const table = gameState.settings;
+  openModal(
+    'Рекорды',
+    [createRecordsSection(table, loadRecords(recordsStore, table))],
+    closeModal,
+  );
 };
 
 const handleGuess = (guess: Code): void => {
@@ -103,12 +171,7 @@ const handleGuess = (guess: Code): void => {
   render();
 };
 
-const handleNewGame = (): void => {
-  gameState = { status: 'idle', settings: gameState.settings };
-  render();
-};
-
-document.body.append(createHeader(), main);
+document.body.append(header, main);
 
 render();
 
