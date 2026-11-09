@@ -11,8 +11,9 @@ body {
     -apple-system,
     'Segoe UI',
     sans-serif;
+  line-height: 1.5;
   color: #1f2937;
-  background: #f8fafc;
+  background: #f1f5f9;
 }
 
 .app__header,
@@ -22,8 +23,27 @@ body {
   padding-inline: 1rem;
 }
 
+.app__header {
+  padding-block: 1.5rem 0.75rem;
+}
+
 .app__title {
+  margin: 0;
   font-size: 1.6rem;
+}
+
+.app__main {
+  padding-block-end: 2rem;
+}
+
+.settings,
+.game,
+.records {
+  margin-block: 0 1rem;
+  padding: 1.25rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.6rem;
 }
 
 .settings {
@@ -63,14 +83,22 @@ body {
   color: #334155;
 }
 
+.game__timer {
+  margin: 0.25rem 0 0;
+  color: #475569;
+}
+
 .game__form {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
 }
 
 .game__input {
-  width: 10rem;
+  flex: 1 1 10rem;
+  min-width: 7rem;
+  max-width: 12rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid #cbd5e1;
   border-radius: 0.4rem;
@@ -79,24 +107,13 @@ body {
   letter-spacing: 0.2em;
 }
 
-.game__submit {
-  padding: 0.5rem 1.2rem;
-  border: none;
-  border-radius: 0.4rem;
-  background: #2563eb;
-  color: #fff;
-  font: inherit;
-  cursor: pointer;
+.game__input:focus {
+  border-color: #2563eb;
 }
 
 .game__error {
   margin: 0.5rem 0 0;
   color: #b91c1c;
-}
-
-.game__timer {
-  margin: 0.25rem 0 0;
-  color: #475569;
 }
 
 .game__win {
@@ -105,15 +122,9 @@ body {
   font-weight: 600;
 }
 
-.game__new {
-  margin-top: 0.75rem;
-  padding: 0.5rem 1.6rem;
-  border: 1px solid #2563eb;
-  border-radius: 0.4rem;
-  background: #fff;
-  color: #2563eb;
-  font: inherit;
-  cursor: pointer;
+.records__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
 }
 
 .game__history-title {
@@ -133,15 +144,6 @@ body {
   font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 }
 
-.records {
-  margin-top: 1.5rem;
-}
-
-.records__title {
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
-}
-
 .records__empty {
   margin: 0;
   color: #475569;
@@ -159,13 +161,23 @@ body {
   text-align: left;
 }
 
+.records__rank,
+.records__attempts {
+  font-variant-numeric: tabular-nums;
+}
+
+.records__rank {
+  width: 2.5rem;
+  color: #475569;
+}
+
 .records__date,
 .records__time {
   font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 }
 
-.settings__play {
-  align-self: flex-start;
+.settings__play,
+.game__submit {
   padding: 0.5rem 1.6rem;
   border: none;
   border-radius: 0.4rem;
@@ -173,4 +185,70 @@ body {
   color: #fff;
   font: inherit;
   cursor: pointer;
+}
+
+.settings__play {
+  align-self: flex-start;
+}
+
+.game__new {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.6rem;
+  border: 1px solid #2563eb;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #2563eb;
+  font: inherit;
+  cursor: pointer;
+}
+
+.settings__play:hover,
+.game__submit:hover {
+  background: #1d4ed8;
+}
+
+.game__new:hover {
+  background: #eff6ff;
+}
+
+.settings__play:active,
+.game__submit:active,
+.game__new:active {
+  transform: translateY(1px);
+}
+
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@media (max-width: 30rem) {
+  .app__header,
+  .app__main {
+    padding-inline: 0.75rem;
+  }
+
+  .app__header {
+    padding-block: 1rem 0.5rem;
+  }
+
+  .app__title {
+    font-size: 1.35rem;
+  }
+
+  .settings,
+  .game,
+  .records {
+    padding: 0.85rem 0.8rem;
+  }
+
+  .game__input {
+    max-width: none;
+  }
+
+  .records__table th,
+  .records__table td {
+    padding: 0.3rem 0.35rem;
+    font-size: 0.95rem;
+  }
 }
