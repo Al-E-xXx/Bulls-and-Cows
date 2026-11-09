@@ -7,18 +7,37 @@ import type {
 } from './types';
 
 export const startRound = (
-  _settings: RoundSettings,
-  _secret: Code,
-  _startedAt: TimeMs,
-): GameState => {
-  throw new Error('not implemented');
-};
+  settings: RoundSettings,
+  secret: Code,
+  startedAt: TimeMs,
+): GameState => ({
+  status: 'playing',
+  settings,
+  secret,
+  history: [],
+  startedAt,
+});
 
 export const registerAttempt = (
-  _state: GameState,
-  _guess: Code,
-  _evaluation: GuessEvaluation,
-  _now: TimeMs,
+  state: GameState,
+  guess: Code,
+  evaluation: GuessEvaluation,
+  now: TimeMs,
 ): GameState => {
-  throw new Error('not implemented');
+  if (state.status !== 'playing') {
+    return state;
+  }
+  if (state.history.some(item => item.guess === guess)) {
+    return state;
+  }
+  const next = {
+    ...state,
+    history: [
+      ...state.history,
+      { attempt: state.history.length + 1, guess, evaluation },
+    ],
+  };
+  return evaluation.bulls === state.settings.length
+    ? { ...next, status: 'won', finishedAt: now }
+    : next;
 };
