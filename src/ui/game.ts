@@ -43,38 +43,11 @@ const createHistoryItem = (
     `Попытка ${attempt}: ${guess} — быков: ${bulls}, коров: ${cows}`,
   );
 
-export const createGameScreen = (
+const createGuessForm = (
   state: RoundState,
   onGuess: (guess: Code) => void,
-): HTMLElement => {
+): { form: HTMLFormElement; error: HTMLParagraphElement } => {
   const { length, base } = state.settings;
-  const section = el('section', 'game');
-
-  const info = el(
-    'p',
-    'game__info',
-    `Длина кода: ${length}, ` + `система счисления: ${BASE_CAPTIONS[base]}`,
-  );
-
-  const timer = el('p', 'game__timer');
-
-  const showTime = (): void => {
-    const finished = state.status === 'won' ? state.finishedAt : Date.now();
-    timer.textContent = `Время: ${formatDuration(
-      elapsedMs(state.startedAt, finished),
-    )}`;
-  };
-  showTime();
-
-  if (state.status === 'playing') {
-    const timerId = setInterval(() => {
-      if (!document.contains(section)) {
-        clearInterval(timerId);
-        return;
-      }
-      showTime();
-    }, 1_000);
-  }
 
   let guess: Code = '';
 
@@ -127,7 +100,55 @@ export const createGameScreen = (
     onGuess(current);
   });
 
-  section.append(info, timer, form, error);
+  return { form, error };
+};
+
+export const createGameScreen = (
+  state: RoundState,
+  onGuess: (guess: Code) => void,
+): HTMLElement => {
+  const { length, base } = state.settings;
+  const section = el('section', 'game');
+
+  const info = el(
+    'p',
+    'game__info',
+    `Длина кода: ${length}, ` + `система счисления: ${BASE_CAPTIONS[base]}`,
+  );
+
+  const timer = el('p', 'game__timer');
+
+  const showTime = (): void => {
+    const finished = state.status === 'won' ? state.finishedAt : Date.now();
+    timer.textContent = `Время: ${formatDuration(
+      elapsedMs(state.startedAt, finished),
+    )}`;
+  };
+  showTime();
+
+  if (state.status === 'playing') {
+    const timerId = setInterval(() => {
+      if (!document.contains(section)) {
+        clearInterval(timerId);
+        return;
+      }
+      showTime();
+    }, 1_000);
+  }
+
+  if (state.status === 'won') {
+    const win = el(
+      'p',
+      'game__win',
+      `Победа! Загаданный код: ${state.secret}. ` +
+        `Попыток: ${state.history.length}. ` +
+        `Время: ${formatDuration(elapsedMs(state.startedAt, state.finishedAt))}`,
+    );
+    section.append(info, timer, win);
+  } else {
+    const guessForm = createGuessForm(state, onGuess);
+    section.append(info, timer, guessForm.form, guessForm.error);
+  }
 
   if (state.history.length > 0) {
     const heading = el('h2', 'game__history-title', 'История попыток');
