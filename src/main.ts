@@ -1,7 +1,12 @@
 import { evaluateGuess } from './game/evaluate.js';
 import { generateSecret } from './game/secret.js';
 import { registerAttempt, startRound } from './game/state.js';
-import type { Code, GameState, RoundSettings } from './game/types.js';
+import type {
+  Code,
+  GameState,
+  RoundSettings,
+  RoundState,
+} from './game/types.js';
 import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
 import { createSettingsScreen } from './ui/settings.js';
@@ -18,17 +23,15 @@ const createHeader = (): HTMLElement => {
   return header;
 };
 
-const isPlaying = (
-  state: GameState,
-): state is Extract<GameState, { status: 'playing' }> =>
-  state.status === 'playing';
+const isRound = (state: GameState): state is RoundState =>
+  state.status !== 'idle';
 
 const render = (): void => {
   clearNode(main);
   if (gameState.status === 'idle') {
     main.append(createSettingsScreen(gameState.settings, handlePlay));
   } else {
-    main.append(createGameScreen(gameState.settings, handleGuess));
+    main.append(createGameScreen(gameState, handleGuess));
   }
 };
 
@@ -42,7 +45,7 @@ const handlePlay = (settings: RoundSettings): void => {
 };
 
 const handleGuess = (guess: Code): void => {
-  if (!isPlaying(gameState)) {
+  if (!isRound(gameState) || gameState.status !== 'playing') {
     return;
   }
   gameState = registerAttempt(

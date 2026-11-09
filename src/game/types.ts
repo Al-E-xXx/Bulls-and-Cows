@@ -52,3 +52,5 @@ export type GameState =
       readonly startedAt: TimeMs;
       readonly finishedAt: TimeMs;
     };
+
+export type RoundState = Extract<GameState, { status: 'playing' | 'won' }>;

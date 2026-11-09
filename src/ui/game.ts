@@ -1,5 +1,5 @@
 import { createDigitValidator, isValidGuess } from '../game/validate.js';
-import type { Code, NumericBase, RoundSettings } from '../game/types.js';
+import type { Code, NumericBase, RoundState } from '../game/types.js';
 import { el } from './dom.js';
 import { BASE_CAPTIONS } from './settings.js';
 
@@ -18,11 +18,23 @@ const sanitizeGuess = (value: string, base: NumericBase, max: number): Code => {
   return kept.join('');
 };
 
+const createHistoryItem = (
+  attempt: number,
+  guess: Code,
+  bulls: number,
+  cows: number,
+): HTMLLIElement =>
+  el(
+    'li',
+    'game__attempt',
+    `Попытка ${attempt}: ${guess} — быков: ${bulls}, коров: ${cows}`,
+  );
+
 export const createGameScreen = (
-  settings: RoundSettings,
+  state: RoundState,
   onGuess: (guess: Code) => void,
 ): HTMLElement => {
-  const { length, base } = settings;
+  const { length, base } = state.settings;
   const section = el('section', 'game');
 
   const info = el(
@@ -69,11 +81,29 @@ export const createGameScreen = (
       return;
     }
     clearError();
+    const current = guess;
     guess = '';
     input.value = '';
-    onGuess(guess);
+    onGuess(current);
   });
 
   section.append(info, form, error);
+
+  if (state.history.length > 0) {
+    const heading = el('h2', 'game__history-title', 'История попыток');
+    const list = el('ul', 'game__history');
+    state.history.forEach(entry => {
+      list.append(
+        createHistoryItem(
+          entry.attempt,
+          entry.guess,
+          entry.evaluation.bulls,
+          entry.evaluation.cows,
+        ),
+      );
+    });
+    section.append(heading, list);
+  }
+
   return section;
 };
