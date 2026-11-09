@@ -1,4 +1,4 @@
-import { MAX_RECORDS } from './constants';
+import { MAX_RECORDS } from './constants.js';
 import type { RecordEntry } from './types';
 
 const byAttemptsThenTime = (a: RecordEntry, b: RecordEntry): number =>

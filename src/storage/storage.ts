@@ -1,4 +1,4 @@
-import { safeParseRecords } from '../game/records';
+import { safeParseRecords } from '../game/records.js';
 import type { RecordEntry, RecordsTableKey } from '../game/types';
 
 export interface KeyValueStore {

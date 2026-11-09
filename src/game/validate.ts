@@ -1,4 +1,4 @@
-import { DIGIT_ALPHABET } from './constants';
+import { DIGIT_ALPHABET } from './constants.js';
 import type { Code, NumericBase } from './types';
 
 export const createDigitValidator =
