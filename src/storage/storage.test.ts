@@ -115,6 +115,7 @@ describe('loadRecords', () => {
         throw new Error('SecurityError');
       },
       setItem: () => undefined,
+      getKeys: () => [],
     };
     expect(loadRecords(store, key4x10)).toStrictEqual([]);
   });
@@ -148,6 +149,7 @@ describe('saveRecords', () => {
       setItem: () => {
         throw new Error('QuotaExceededError');
       },
+      getKeys: () => [],
     };
     expect(() => saveRecords(store, key4x10, [rec(2, 100)])).not.toThrow();
   });

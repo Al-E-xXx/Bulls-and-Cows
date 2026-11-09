@@ -23,7 +23,11 @@ import { createSettingsScreen } from './ui/settings.js';
 
 const DEFAULT_SETTINGS: RoundSettings = { length: 4, base: 10 };
 
-const recordsStore: KeyValueStore = window.localStorage;
+const recordsStore: KeyValueStore = {
+  getItem: key => window.localStorage.getItem(key),
+  setItem: (key, value) => window.localStorage.setItem(key, value),
+  getKeys: () => Object.keys(window.localStorage),
+};
 
 let gameState: GameState = { status: 'idle', settings: DEFAULT_SETTINGS };
 

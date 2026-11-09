@@ -35,6 +35,11 @@ export interface RecordsTableKey {
   readonly base: NumericBase;
 }
 
+export interface RecordsTable {
+  readonly key: RecordsTableKey;
+  readonly records: readonly RecordEntry[];
+}
+
 export type GameState =
   | { readonly status: 'idle'; readonly settings: RoundSettings }
   | {
