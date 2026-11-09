@@ -1,13 +1,21 @@
 import { evaluateGuess } from './game/evaluate.js';
+import { addRecord } from './game/records.js';
 import { generateSecret } from './game/secret.js';
 import { registerAttempt, startRound } from './game/state.js';
+import { elapsedMs } from './game/time.js';
 import type {
   Code,
   GameState,
+  RecordEntry,
+  RecordsTableKey,
   RoundSettings,
   RoundState,
 } from './game/types.js';
-import { loadRecords, type KeyValueStore } from './storage/storage.js';
+import {
+  loadRecords,
+  saveRecords,
+  type KeyValueStore,
+} from './storage/storage.js';
 import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
 import { createRecordsSection } from './ui/records.js';
@@ -29,6 +37,27 @@ const createHeader = (): HTMLElement => {
 
 const isRound = (state: GameState): state is RoundState =>
   state.status !== 'idle';
+
+const persistWinRecord = (state: RoundState): void => {
+  if (state.status !== 'won') {
+    return;
+  }
+  const table: RecordsTableKey = {
+    length: state.settings.length,
+    base: state.settings.base,
+  };
+  const record: RecordEntry = {
+    ...table,
+    date: new Date(state.finishedAt).toISOString(),
+    attempts: state.history.length,
+    timeMs: elapsedMs(state.startedAt, state.finishedAt),
+  };
+  saveRecords(
+    recordsStore,
+    table,
+    addRecord(loadRecords(recordsStore, table), record),
+  );
+};
 
 const render = (): void => {
   clearNode(main);
@@ -64,6 +93,9 @@ const handleGuess = (guess: Code): void => {
     evaluateGuess(gameState.secret, guess),
     Date.now(),
   );
+  if (gameState.status === 'won') {
+    persistWinRecord(gameState);
+  }
   render();
 };
 
