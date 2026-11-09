@@ -1,6 +1,7 @@
-import { MAX_CODE_LENGTH, MIN_CODE_LENGTH } from '../game/constants.js';
+import { MIN_CODE_LENGTH, maxCodeLengthForBase } from '../game/constants.js';
+import { countPossibleSecrets } from '../game/counting.js';
 import type { NumericBase, RoundSettings } from '../game/types.js';
-import { el } from './dom.js';
+import { clearNode, el } from './dom.js';
 
 export const BASE_CAPTIONS: Readonly<Record<NumericBase, string>> = {
   2: 'Двоичная',
@@ -16,6 +17,9 @@ const isNumericBase = (value: number): value is NumericBase =>
 
 const lengthsInRange = (from: number, to: number): readonly number[] =>
   from > to ? [] : [from, ...lengthsInRange(from + 1, to)];
+
+const clampLength = (length: number, base: NumericBase): number =>
+  Math.min(length, maxCodeLengthForBase(base));
 
 const createOption = (
   name: string,
@@ -33,40 +37,33 @@ const createOption = (
   return label;
 };
 
-const readSettings = (form: HTMLFormElement): RoundSettings | null => {
-  const lengthInput = form.querySelector<HTMLInputElement>(
-    'input[name="code-length"]:checked',
-  );
-  const baseInput = form.querySelector<HTMLInputElement>(
-    'input[name="code-base"]:checked',
-  );
-  if (lengthInput === null || baseInput === null) {
-    return null;
-  }
-  const length = Number(lengthInput.value);
-  const base = Number(baseInput.value);
-  if (!Number.isInteger(length) || !isNumericBase(base)) {
-    return null;
-  }
-  return { length, base };
-};
-
 export const createSettingsScreen = (
   initial: RoundSettings,
   onPlay: (settings: RoundSettings) => void,
 ): HTMLElement => {
+  let current: RoundSettings = {
+    length: clampLength(initial.length, initial.base),
+    base: initial.base,
+  };
+
   const lengthGroup = el('fieldset', 'settings__group');
-  lengthGroup.append(el('legend', '', 'Длина секретного кода'));
-  lengthsInRange(MIN_CODE_LENGTH, MAX_CODE_LENGTH).forEach(length => {
-    lengthGroup.append(
-      createOption(
-        'code-length',
-        length,
-        String(length),
-        length === initial.length,
-      ),
+
+  const renderLengths = (): void => {
+    clearNode(lengthGroup);
+    lengthGroup.append(el('legend', '', 'Длина секретного кода'));
+    lengthsInRange(MIN_CODE_LENGTH, maxCodeLengthForBase(current.base)).forEach(
+      length => {
+        lengthGroup.append(
+          createOption(
+            'code-length',
+            length,
+            String(length),
+            length === current.length,
+          ),
+        );
+      },
     );
-  });
+  };
 
   const baseGroup = el('fieldset', 'settings__group');
   baseGroup.append(el('legend', '', 'Система счисления'));
@@ -76,22 +73,49 @@ export const createSettingsScreen = (
         'code-base',
         base,
         BASE_CAPTIONS[base],
-        base === initial.base,
+        base === current.base,
       ),
     );
   });
+
+  const countLine = el('p', 'settings__count');
+
+  const renderCount = (): void => {
+    const count = countPossibleSecrets(current.length, current.base);
+    countLine.textContent = `Возможных вариантов кода: ${count.toLocaleString(
+      'ru-RU',
+    )}`;
+  };
 
   const playButton = el('button', 'settings__play', 'Играть');
   playButton.type = 'submit';
 
   const form = el('form', 'settings');
-  form.append(lengthGroup, baseGroup, playButton);
+  form.append(lengthGroup, baseGroup, countLine, playButton);
+
+  form.addEventListener('change', event => {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement)) {
+      return;
+    }
+    const value = Number(target.value);
+    if (target.name === 'code-base' && isNumericBase(value)) {
+      current = { length: clampLength(current.length, value), base: value };
+      renderLengths();
+    } else if (target.name === 'code-length' && Number.isInteger(value)) {
+      current = { ...current, length: value };
+    } else {
+      return;
+    }
+    renderCount();
+  });
+
   form.addEventListener('submit', event => {
     event.preventDefault();
-    const next = readSettings(form);
-    if (next !== null) {
-      onPlay(next);
-    }
+    onPlay(current);
   });
+
+  renderLengths();
+  renderCount();
   return form;
 };
