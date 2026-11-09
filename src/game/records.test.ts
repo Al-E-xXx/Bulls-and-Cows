@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { MAX_RECORDS } from './constants';
-import { addRecord, safeParseRecords } from './records';
-import type { RecordEntry } from './types';
+import { addRecord, defaultTableKey, safeParseRecords } from './records';
+import type { NumericBase, RecordEntry, RecordsTable } from './types';
 
 const rec = (
   attempts: number,
@@ -134,5 +134,85 @@ describe('safeParseRecords', () => {
 
   it.each(broken)('returns an empty table for %s', raw => {
     expect(safeParseRecords(raw)).toStrictEqual([]);
+  });
+});
+
+const entryOn = (
+  date: string,
+  extra: Partial<RecordEntry> = {},
+): RecordEntry => ({
+  length: 4,
+  base: 10,
+  date,
+  attempts: 3,
+  timeMs: 3000,
+  ...extra,
+});
+
+const tableOf = (
+  length: number,
+  base: NumericBase,
+  dates: readonly string[],
+): RecordsTable => ({
+  key: { length, base },
+  records: dates.map(date => entryOn(date, { length, base })),
+});
+
+describe('defaultTableKey', () => {
+  it('returns null when there are no tables', () => {
+    expect(defaultTableKey([])).toBeNull();
+    expect(defaultTableKey([], { length: 4, base: 10 })).toBeNull();
+  });
+
+  it('returns the preferred table when it exists', () => {
+    const tables = [
+      tableOf(4, 10, ['2026-05-05']),
+      tableOf(6, 16, ['2020-01-01']),
+    ];
+    expect(defaultTableKey(tables, { length: 6, base: 16 })).toBe(
+      tables[1]?.key,
+    );
+  });
+
+  it('ignores a preferred table that is not among the given ones', () => {
+    const tables = [
+      tableOf(4, 10, ['2026-01-01']),
+      tableOf(6, 16, ['2026-05-05']),
+    ];
+    expect(defaultTableKey(tables, { length: 2, base: 2 })).toStrictEqual({
+      length: 6,
+      base: 16,
+    });
+  });
+
+  it('falls back to the table of the most recent record', () => {
+    const tables = [
+      tableOf(4, 10, ['2026-01-05', '2026-03-01']),
+      tableOf(6, 16, ['2026-02-01']),
+    ];
+    expect(defaultTableKey(tables)).toStrictEqual({ length: 4, base: 10 });
+  });
+
+  it('checks every record of a table, not only the first one', () => {
+    const tables = [
+      tableOf(4, 10, ['2026-01-01', '2026-11-09', '2026-04-04']),
+      tableOf(6, 16, ['2026-06-06']),
+    ];
+    expect(defaultTableKey(tables)).toBe(tables[0]?.key);
+  });
+
+  it('breaks equal dates by the earlier table of the given order', () => {
+    const tables = [
+      tableOf(4, 10, ['2026-05-05']),
+      tableOf(6, 16, ['2026-05-05']),
+    ];
+    expect(defaultTableKey(tables)).toBe(tables[0]?.key);
+    expect(defaultTableKey([...tables].reverse())).toBe(tables[1]?.key);
+  });
+
+  it('keeps a single table regardless of the preferred one', () => {
+    const tables = [tableOf(2, 2, ['2026-01-01'])];
+    expect(defaultTableKey(tables)).toBe(tables[0]?.key);
+    expect(defaultTableKey(tables, null)).toBe(tables[0]?.key);
   });
 });
