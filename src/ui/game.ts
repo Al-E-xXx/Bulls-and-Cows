@@ -1,5 +1,5 @@
-import { createDigitValidator } from '../game/validate.js';
-import type { Code, GameState, NumericBase } from '../game/types.js';
+import { createDigitValidator, isValidGuess } from '../game/validate.js';
+import type { Code, NumericBase, RoundSettings } from '../game/types.js';
 import { el } from './dom.js';
 import { BASE_CAPTIONS } from './settings.js';
 
@@ -18,8 +18,11 @@ const sanitizeGuess = (value: string, base: NumericBase, max: number): Code => {
   return kept.join('');
 };
 
-export const createGameScreen = (state: GameState): HTMLElement => {
-  const { length, base } = state.settings;
+export const createGameScreen = (
+  settings: RoundSettings,
+  onGuess: (guess: Code) => void,
+): HTMLElement => {
+  const { length, base } = settings;
   const section = el('section', 'game');
 
   const info = el(
@@ -37,9 +40,18 @@ export const createGameScreen = (state: GameState): HTMLElement => {
   input.spellcheck = false;
   input.setAttribute('aria-label', 'Ваша попытка');
 
+  const error = el('p', 'game__error');
+  error.hidden = true;
+
+  const clearError = (): void => {
+    error.textContent = '';
+    error.hidden = true;
+  };
+
   input.addEventListener('input', () => {
     guess = sanitizeGuess(input.value, base, length);
     input.value = guess;
+    clearError();
   });
 
   const submit = el('button', 'game__submit', 'Проверить');
@@ -48,6 +60,20 @@ export const createGameScreen = (state: GameState): HTMLElement => {
   const form = el('form', 'game__form');
   form.append(input, submit);
 
-  section.append(info, form);
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!isValidGuess(guess, length, base)) {
+      error.textContent =
+        'Нужен код из разных допустимых символов полной длины';
+      error.hidden = false;
+      return;
+    }
+    clearError();
+    guess = '';
+    input.value = '';
+    onGuess(guess);
+  });
+
+  section.append(info, form, error);
   return section;
 };
