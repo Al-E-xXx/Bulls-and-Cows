@@ -7,11 +7,15 @@ import type {
   RoundSettings,
   RoundState,
 } from './game/types.js';
+import { loadRecords, type KeyValueStore } from './storage/storage.js';
 import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
+import { createRecordsSection } from './ui/records.js';
 import { createSettingsScreen } from './ui/settings.js';
 
 const DEFAULT_SETTINGS: RoundSettings = { length: 4, base: 10 };
+
+const recordsStore: KeyValueStore = window.localStorage;
 
 let gameState: GameState = { status: 'idle', settings: DEFAULT_SETTINGS };
 
@@ -31,7 +35,13 @@ const render = (): void => {
   if (gameState.status === 'idle') {
     main.append(createSettingsScreen(gameState.settings, handlePlay));
   } else {
-    main.append(createGameScreen(gameState, handleGuess));
+    main.append(
+      createGameScreen(gameState, handleGuess),
+      createRecordsSection(
+        gameState.settings,
+        loadRecords(recordsStore, gameState.settings),
+      ),
+    );
   }
 };
 

@@ -122,6 +122,37 @@ body {
   font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 }
 
+.records {
+  margin-top: 1.5rem;
+}
+
+.records__title {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.records__empty {
+  margin: 0;
+  color: #475569;
+}
+
+.records__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.records__table th,
+.records__table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.records__date,
+.records__time {
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+
 .settings__play {
   align-self: flex-start;
   padding: 0.5rem 1.6rem;
