@@ -1,10 +1,13 @@
-import type { RoundSettings } from './game/types.js';
+import { generateSecret } from './game/secret.js';
+import { startRound } from './game/state.js';
+import type { GameState, RoundSettings } from './game/types.js';
 import { clearNode, el } from './ui/dom.js';
+import { createGameScreen } from './ui/game.js';
 import { createSettingsScreen } from './ui/settings.js';
 
 const DEFAULT_SETTINGS: RoundSettings = { length: 4, base: 10 };
 
-let settings: RoundSettings = DEFAULT_SETTINGS;
+let gameState: GameState = { status: 'idle', settings: DEFAULT_SETTINGS };
 
 const main = el('main', 'app__main');
 
@@ -14,17 +17,26 @@ const createHeader = (): HTMLElement => {
   return header;
 };
 
-const handlePlay = (next: RoundSettings): void => {
-  settings = next;
+const render = (): void => {
+  clearNode(main);
+  if (gameState.status === 'idle') {
+    main.append(createSettingsScreen(gameState.settings, handlePlay));
+  } else {
+    main.append(createGameScreen(gameState));
+  }
 };
 
-const renderSettings = (): void => {
-  clearNode(main);
-  main.append(createSettingsScreen(settings, handlePlay));
+const handlePlay = (settings: RoundSettings): void => {
+  gameState = startRound(
+    settings,
+    generateSecret(settings.length, settings.base, Math.random),
+    Date.now(),
+  );
+  render();
 };
 
 document.body.append(createHeader(), main);
 
-renderSettings();
+render();
 
 export {};
