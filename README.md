@@ -59,7 +59,7 @@ python3 -m http.server
 Автоматический деплой на GitHub Pages настроен через GitHub Actions
 (`.github/workflows/deploy-pages.yml`): каждый `push` в ветку `bulls-and-cows`
 прогоняет линтер и тесты, собирает `tsc` и публикует файлы `index.html`,
-`styles.css` и каталог `dist/` на <https://al-exxx.github.io/Bulls-and-Cows/>.
+`styles.css` и каталог `dist/` на <https://al-e-xxx.github.io/Bulls-and-Cows/>.
 Источник публикации в настройках Pages — «GitHub Actions».
 
 ## Скрипты
