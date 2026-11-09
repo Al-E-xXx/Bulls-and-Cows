@@ -12,9 +12,15 @@ export const createDigitValidator =
   };
 
 export const isValidGuess = (
-  _guess: Code,
-  _length: number,
-  _base: NumericBase,
+  guess: Code,
+  length: number,
+  base: NumericBase,
 ): boolean => {
-  throw new Error('not implemented');
+  const validator = createDigitValidator(base);
+  const canonical = Array.from(guess).map(validator);
+  return (
+    canonical.length === length &&
+    canonical.every(digit => digit !== undefined) &&
+    new Set(canonical).size === length
+  );
 };
