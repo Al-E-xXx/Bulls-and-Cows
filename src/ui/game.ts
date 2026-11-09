@@ -1,7 +1,19 @@
 import { createDigitValidator, isValidGuess } from '../game/validate.js';
-import type { Code, NumericBase, RoundState } from '../game/types.js';
+import type {
+  Code,
+  HistoryEntry,
+  NumericBase,
+  RoundState,
+} from '../game/types.js';
 import { el } from './dom.js';
 import { BASE_CAPTIONS } from './settings.js';
+
+const INVALID_GUESS_MESSAGE =
+  'Нужен код из разных допустимых символов полной длины';
+const DUPLICATE_MESSAGE = 'Такая попытка уже была';
+
+const hasDuplicate = (history: readonly HistoryEntry[], guess: Code): boolean =>
+  history.some(entry => entry.guess === guess);
 
 const sanitizeGuess = (value: string, base: NumericBase, max: number): Code => {
   const validator = createDigitValidator(base);
@@ -60,6 +72,11 @@ export const createGameScreen = (
     error.hidden = true;
   };
 
+  const showError = (message: string): void => {
+    error.textContent = message;
+    error.hidden = false;
+  };
+
   input.addEventListener('input', () => {
     guess = sanitizeGuess(input.value, base, length);
     input.value = guess;
@@ -75,9 +92,11 @@ export const createGameScreen = (
   form.addEventListener('submit', event => {
     event.preventDefault();
     if (!isValidGuess(guess, length, base)) {
-      error.textContent =
-        'Нужен код из разных допустимых символов полной длины';
-      error.hidden = false;
+      showError(INVALID_GUESS_MESSAGE);
+      return;
+    }
+    if (hasDuplicate(state.history, guess)) {
+      showError(DUPLICATE_MESSAGE);
       return;
     }
     clearError();
