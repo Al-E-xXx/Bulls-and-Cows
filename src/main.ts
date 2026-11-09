@@ -65,7 +65,7 @@ const render = (): void => {
     main.append(createSettingsScreen(gameState.settings, handlePlay));
   } else {
     main.append(
-      createGameScreen(gameState, handleGuess),
+      createGameScreen(gameState, handleGuess, handleNewGame),
       createRecordsSection(
         gameState.settings,
         loadRecords(recordsStore, gameState.settings),
@@ -96,6 +96,11 @@ const handleGuess = (guess: Code): void => {
   if (gameState.status === 'won') {
     persistWinRecord(gameState);
   }
+  render();
+};
+
+const handleNewGame = (): void => {
+  gameState = { status: 'idle', settings: gameState.settings };
   render();
 };
 

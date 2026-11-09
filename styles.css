@@ -105,6 +105,17 @@ body {
   font-weight: 600;
 }
 
+.game__new {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.6rem;
+  border: 1px solid #2563eb;
+  border-radius: 0.4rem;
+  background: #fff;
+  color: #2563eb;
+  font: inherit;
+  cursor: pointer;
+}
+
 .game__history-title {
   margin: 1.25rem 0 0.5rem;
   font-size: 1.1rem;
