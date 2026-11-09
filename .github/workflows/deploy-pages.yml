@@ -44,6 +44,7 @@ jobs:
           mkdir _site
           cp index.html styles.css _site/
           cp -r dist _site/dist
+          cp -r assets _site/assets
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

@@ -78,6 +78,7 @@ python3 -m http.server
 ├── index.html          — пустой <body> + <script type="module"> (UI генерируется кодом)
 ├── styles.css          — стили и адаптивность (media-запросы)
 ├── DESIGN.md           — архитектура, структуры данных, алгоритмы и Big O
+├── assets/             — статика: favicon.svg, фон, звук
 ├── .github/workflows/  — CI: тесты и автодеплой на GitHub Pages при push
 └── src/
     ├── main.ts         — контроллер: состояние игры + полный ре-рендер экранов
