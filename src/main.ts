@@ -12,6 +12,7 @@ import type {
   RoundState,
 } from './game/types.js';
 import {
+  collectAllRecords,
   loadRecords,
   saveRecords,
   type KeyValueStore,
@@ -20,7 +21,7 @@ import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
 import { createMenu } from './ui/menu.js';
 import { createModal, type ModalController } from './ui/modal.js';
-import { createRecordsSection } from './ui/records.js';
+import { createRecordsPanel } from './ui/records.js';
 import { createSettingsScreen } from './ui/settings.js';
 
 const DEFAULT_SETTINGS: RoundSettings = { length: 4, base: 10 };
@@ -87,20 +88,14 @@ const render = (): void => {
     createMenu(isRound(gameState), {
       onPlay: handleMenuPlay,
       onNewGame: handleNewGame,
-      onRecords: handleRecords,
+      onRecords: () => openRecordsModal(),
     }),
   );
   if (gameState.status === 'idle') {
     settingsForm = createSettingsScreen(gameState.settings, handlePlay);
     main.append(settingsForm);
   } else {
-    main.append(
-      createGameScreen(gameState, handleGuess, handleNewGame),
-      createRecordsSection(
-        gameState.settings,
-        loadRecords(recordsStore, gameState.settings),
-      ),
-    );
+    main.append(createGameScreen(gameState, handleGuess, handleNewGame));
   }
 };
 
@@ -146,11 +141,10 @@ const handleNewGame = (): void => {
   );
 };
 
-const handleRecords = (): void => {
-  const table = gameState.settings;
+const openRecordsModal = (preferred: RecordsTableKey | null = null): void => {
   openModal(
     'Рекорды',
-    [createRecordsSection(table, loadRecords(recordsStore, table))],
+    [createRecordsPanel(collectAllRecords(recordsStore), preferred)],
     closeModal,
   );
 };
@@ -169,6 +163,9 @@ const handleGuess = (guess: Code): void => {
     persistWinRecord(gameState);
   }
   render();
+  if (gameState.status === 'won') {
+    openRecordsModal(gameState.settings);
+  }
 };
 
 document.body.append(header, main);

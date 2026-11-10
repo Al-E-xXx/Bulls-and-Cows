@@ -77,8 +77,7 @@ body {
 }
 
 .settings,
-.game,
-.records {
+.game {
   margin-block: 0 1rem;
   padding: 1.25rem;
   background: #fff;
@@ -162,11 +161,6 @@ body {
   font-weight: 600;
 }
 
-.records__title {
-  margin: 0 0 0.5rem;
-  font-size: 1.1rem;
-}
-
 .game__history-title {
   margin: 1.25rem 0 0.5rem;
   font-size: 1.1rem;
@@ -182,6 +176,38 @@ body {
   padding: 0.35rem 0;
   border-bottom: 1px solid #e2e8f0;
   font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+}
+
+.records__select {
+  display: block;
+  margin: 0 0 1rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.4rem;
+  background: #f8fafc;
+  color: #1f2937;
+  font: inherit;
+  cursor: pointer;
+}
+
+.records__select:hover {
+  border-color: #94a3b8;
+}
+
+.records__caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.records__badge {
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .records__empty {
@@ -353,8 +379,7 @@ body {
   }
 
   .settings,
-  .game,
-  .records {
+  .game {
     padding: 0.85rem 0.8rem;
   }
 
