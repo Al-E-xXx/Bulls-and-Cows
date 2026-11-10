@@ -6,7 +6,7 @@ import type {
   NumericBase,
   RoundState,
 } from '../game/types.js';
-import { el } from './dom.js';
+import { el, scrollToEnd } from './dom.js';
 import { BASE_CAPTIONS } from './settings.js';
 
 const INVALID_GUESS_MESSAGE =
@@ -164,6 +164,9 @@ export const createGameScreen = (
       );
     });
     section.append(heading, list);
+    queueMicrotask(() => {
+      scrollToEnd(list);
+    });
   }
 
   return section;

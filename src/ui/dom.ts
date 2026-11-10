@@ -16,3 +16,7 @@ export const el = <Tag extends keyof HTMLElementTagNameMap>(
 export const clearNode = (node: HTMLElement): void => {
   node.replaceChildren();
 };
+
+export const scrollToEnd = (node: HTMLElement): void => {
+  node.scrollTop = node.scrollHeight;
+};
