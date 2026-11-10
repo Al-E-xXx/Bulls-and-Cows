@@ -23,8 +23,15 @@ import { createMenu } from './ui/menu.js';
 import { createModal, type ModalController } from './ui/modal.js';
 import { createRecordsPanel } from './ui/records.js';
 import { createSettingsScreen } from './ui/settings.js';
+import { createSoundPlayer } from './ui/sound.js';
 
 const DEFAULT_SETTINGS: RoundSettings = { length: 4, base: 10 };
+
+const sounds = createSoundPlayer({
+  play: './assets/cow.mp3',
+  guess: './assets/bell.mp3',
+  win: './assets/cow.mp3',
+});
 
 const recordsStore: KeyValueStore = {
   getItem: key => window.localStorage.getItem(key),
@@ -106,6 +113,7 @@ const resetToIdle = (): void => {
 };
 
 const handlePlay = (settings: RoundSettings): void => {
+  sounds.play('play');
   gameState = startRound(
     settings,
     generateSecret(settings.length, settings.base, Math.random),
@@ -159,6 +167,7 @@ const handleGuess = (guess: Code): void => {
     evaluateGuess(gameState.secret, guess),
     Date.now(),
   );
+  sounds.play(gameState.status === 'won' ? 'win' : 'guess');
   if (gameState.status === 'won') {
     persistWinRecord(gameState);
   }
