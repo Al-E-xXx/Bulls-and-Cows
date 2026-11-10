@@ -19,6 +19,7 @@ import {
 } from './storage/storage.js';
 import { clearNode, el } from './ui/dom.js';
 import { createGameScreen } from './ui/game.js';
+import { playLogoIntro } from './ui/intro.js';
 import { createMenu } from './ui/menu.js';
 import { createModal, type ModalController } from './ui/modal.js';
 import { createRecordsPanel } from './ui/records.js';
@@ -180,5 +181,6 @@ const handleGuess = (guess: Code): void => {
 document.body.append(header, main);
 
 render();
+playLogoIntro([header, main]);
 
 export {};
