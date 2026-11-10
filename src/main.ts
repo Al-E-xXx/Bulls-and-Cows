@@ -23,6 +23,7 @@ import { playLogoIntro } from './ui/intro.js';
 import { createMenu } from './ui/menu.js';
 import { createModal, type ModalController } from './ui/modal.js';
 import { createRecordsPanel } from './ui/records.js';
+import { createRulesPanel } from './ui/rules.js';
 import { createSettingsScreen } from './ui/settings.js';
 import { createSoundPlayer } from './ui/sound.js';
 
@@ -97,6 +98,7 @@ const render = (): void => {
       onPlay: handleMenuPlay,
       onNewGame: handleNewGame,
       onRecords: () => openRecordsModal(),
+      onRules: () => openRulesModal(),
     }),
   );
   if (gameState.status === 'idle') {
@@ -156,6 +158,10 @@ const openRecordsModal = (preferred: RecordsTableKey | null = null): void => {
     [createRecordsPanel(collectAllRecords(recordsStore), preferred)],
     closeModal,
   );
+};
+
+const openRulesModal = (): void => {
+  openModal('Правила игры', [createRulesPanel()], closeModal);
 };
 
 const handleGuess = (guess: Code): void => {

@@ -43,7 +43,8 @@ body {
 
 .menu__play,
 .menu__new,
-.menu__records {
+.menu__records,
+.menu__rules {
   padding: 0.5rem 1.6rem;
   border: 1px solid #2563eb;
   border-radius: 0.4rem;
@@ -63,13 +64,15 @@ body {
 }
 
 .menu__new:hover:not(:disabled),
-.menu__records:hover:not(:disabled) {
+.menu__records:hover:not(:disabled),
+.menu__rules:hover:not(:disabled) {
   background: #eff6ff;
 }
 
 .menu__play:active:not(:disabled),
 .menu__new:active:not(:disabled),
-.menu__records:active:not(:disabled) {
+.menu__records:active:not(:disabled),
+.menu__rules:active:not(:disabled) {
   transform: translateY(1px);
 }
 
@@ -386,6 +389,43 @@ body {
   align-self: center;
 }
 
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rules__heading {
+  margin: 0.8rem 0 0;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.rules__heading:first-child {
+  margin-top: 0;
+}
+
+.rules__text {
+  margin: 0;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.rules__list {
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+.rules__item {
+  margin-bottom: 0.3rem;
+  color: #334155;
+  line-height: 1.45;
+}
+
+.rules__item:last-child {
+  margin-bottom: 0;
+}
+
 :focus-visible {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
@@ -467,7 +507,8 @@ body {
 
   .menu__play,
   .menu__new,
-  .menu__records {
+  .menu__records,
+  .menu__rules {
     padding: 0.4rem 1rem;
   }
 

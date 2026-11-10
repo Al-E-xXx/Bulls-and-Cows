@@ -4,6 +4,7 @@ export interface MenuHandlers {
   readonly onPlay: () => void;
   readonly onNewGame: () => void;
   readonly onRecords: () => void;
+  readonly onRules: () => void;
 }
 
 const createMenuItem = (
@@ -28,6 +29,7 @@ export const createMenu = (
     createMenuItem('menu__play', 'Играть', handlers.onPlay, roundActive),
     createMenuItem('menu__new', 'Новая игра', handlers.onNewGame, !roundActive),
     createMenuItem('menu__records', 'Рекорды', handlers.onRecords, false),
+    createMenuItem('menu__rules', 'Правила', handlers.onRules, false),
   );
   return nav;
 };
