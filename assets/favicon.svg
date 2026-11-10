@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Bulls and Cows favicon">
+    <title>Bulls and Cows — favicon</title>
+    <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3EC5F0"/>
+            <stop offset="1" stop-color="#FFD98A"/>
+        </linearGradient>
+        <linearGradient id="bull" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#FF7A29"/>
+            <stop offset="1" stop-color="#E23A15"/>
+        </linearGradient>
+        <!-- маска, чтобы пятна лежали только внутри буквы C -->
+        <mask id="cMask">
+            <path d="M110 42 C96 30 76 34 70 50 C66 60 66 68 70 78 C76 94 96 98 110 86"
+                  fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+            </mask>
+        </defs>
+
+        <!-- Фон-плашка; удалите этот rect, если нужна прозрачная фавиконка -->
+        <rect x="3" y="3" width="122" height="122" rx="28" fill="url(#sky)" stroke="#1A1A1A" stroke-width="5"/>
+
+        <!-- Бычьи рога за буквой B -->
+        <path d="M32 34 C22 28 17 18 20 10 C29 15 35 23 38 32 Z"
+              fill="#F2D096" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M50 32 C53 22 60 13 68 10 C66 20 61 28 56 36 Z"
+              fill="#F2D096" stroke="#1A1A1A" stroke-width="5" stroke-linejoin="round"/>
+
+        <!-- Буква B: чёрная обводка + рыжий градиент -->
+        <path d="M34 34 V94 M34 34 H46 A15 15 0 0 1 46 64 H34 M34 64 H48 A15 15 0 0 1 48 94 H34"
+              fill="none" stroke="#1A1A1A" stroke-width="21" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M34 34 V94 M34 34 H46 A15 15 0 0 1 46 64 H34 M34 64 H48 A15 15 0 0 1 48 94 H34"
+              fill="none" stroke="url(#bull)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- Буква C: обводка, кремовый цвет, пятна -->
+        <path d="M110 42 C96 30 76 34 70 50 C66 60 66 68 70 78 C76 94 96 98 110 86"
+              fill="none" stroke="#1A1A1A" stroke-width="21" stroke-linecap="round"/>
+        <path d="M110 42 C96 30 76 34 70 50 C66 60 66 68 70 78 C76 94 96 98 110 86"
+              fill="none" stroke="#F6EFD8" stroke-width="12" stroke-linecap="round"/>
+        <g mask="url(#cMask)" fill="#262626">
+            <ellipse cx="76" cy="44" rx="7" ry="6"/>
+            <ellipse cx="68" cy="64" rx="6" ry="7"/>
+            <ellipse cx="78" cy="84" rx="7" ry="6"/>
+            <ellipse cx="95" cy="34" rx="6" ry="5"/>
+            <ellipse cx="97" cy="92" rx="6" ry="5"/>
+        </g>
+    </svg>
