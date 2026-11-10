@@ -2,13 +2,10 @@ import { DIGIT_ALPHABET } from './constants.js';
 import type { Code, NumericBase } from './types';
 
 export const createDigitValidator =
-  (base: NumericBase): ((symbol: string) => string | undefined) =>
-  (symbol: string): string | undefined => {
+  (base: NumericBase): ((symbol: string) => boolean) =>
+  (symbol: string): boolean => {
     const alphabet = DIGIT_ALPHABET.slice(0, base);
-    const normalized = symbol.toLowerCase();
-    return normalized.length === 1 && alphabet.includes(normalized)
-      ? normalized
-      : undefined;
+    return symbol.length === 1 && alphabet.includes(symbol.toLowerCase());
   };
 
 export const isValidGuess = (
@@ -17,10 +14,10 @@ export const isValidGuess = (
   base: NumericBase,
 ): boolean => {
   const validator = createDigitValidator(base);
-  const canonical = Array.from(guess).map(validator);
+  const digits = Array.from(guess, symbol => symbol.toLowerCase());
   return (
-    canonical.length === length &&
-    canonical.every(digit => digit !== undefined) &&
-    new Set(canonical).size === length
+    digits.length === length &&
+    digits.every(digit => validator(digit)) &&
+    new Set(digits).size === length
   );
 };

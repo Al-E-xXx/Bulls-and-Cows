@@ -20,8 +20,8 @@ const sanitizeGuess = (value: string, base: NumericBase, max: number): Code => {
   const validator = createDigitValidator(base);
   const kept: string[] = [];
   for (const symbol of value) {
-    const digit = validator(symbol);
-    if (digit !== undefined && !kept.includes(digit)) {
+    const digit = symbol.toLowerCase();
+    if (validator(digit) && !kept.includes(digit)) {
       kept.push(digit);
     }
     if (kept.length === max) {
