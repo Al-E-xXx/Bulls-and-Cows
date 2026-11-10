@@ -87,11 +87,8 @@ export const createSettingsScreen = (
     )}`;
   };
 
-  const playButton = el('button', 'settings__play', 'Играть');
-  playButton.type = 'submit';
-
   const form = el('form', 'settings');
-  form.append(lengthGroup, baseGroup, countLine, playButton);
+  form.append(lengthGroup, baseGroup, countLine);
 
   form.addEventListener('change', event => {
     const target = event.target;

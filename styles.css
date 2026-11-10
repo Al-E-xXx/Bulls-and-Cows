@@ -242,7 +242,7 @@ body {
   font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
 }
 
-.settings__play,
+.modal__primary,
 .game__submit {
   padding: 0.5rem 1.6rem;
   border: none;
@@ -253,12 +253,7 @@ body {
   cursor: pointer;
 }
 
-.settings__play {
-  align-self: flex-start;
-}
-
-.game__new {
-  margin-top: 0.75rem;
+.modal__secondary {
   padding: 0.5rem 1.6rem;
   border: 1px solid #2563eb;
   border-radius: 0.4rem;
@@ -268,18 +263,18 @@ body {
   cursor: pointer;
 }
 
-.settings__play:hover,
+.modal__primary:hover,
 .game__submit:hover {
   background: #1d4ed8;
 }
 
-.game__new:hover {
+.modal__secondary:hover {
   background: #eff6ff;
 }
 
-.settings__play:active,
+.modal__primary:active,
 .game__submit:active,
-.game__new:active {
+.modal__secondary:active {
   transform: translateY(1px);
 }
 

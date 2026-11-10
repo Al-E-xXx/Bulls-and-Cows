@@ -103,17 +103,9 @@ const createGuessForm = (
   return { form, error };
 };
 
-const createNewGameButton = (onNewGame: () => void): HTMLButtonElement => {
-  const button = el('button', 'game__new', 'Новая игра');
-  button.type = 'button';
-  button.addEventListener('click', onNewGame);
-  return button;
-};
-
 export const createGameScreen = (
   state: RoundState,
   onGuess: (guess: Code) => void,
-  onNewGame: () => void,
 ): HTMLElement => {
   const { length, base } = state.settings;
   const section = el('section', 'game');
@@ -152,16 +144,10 @@ export const createGameScreen = (
         `Попыток: ${state.history.length}. ` +
         `Время: ${formatDuration(elapsedMs(state.startedAt, state.finishedAt))}`,
     );
-    section.append(info, timer, win, createNewGameButton(onNewGame));
+    section.append(info, timer, win);
   } else {
     const guessForm = createGuessForm(state, onGuess);
-    section.append(
-      info,
-      timer,
-      guessForm.form,
-      guessForm.error,
-      createNewGameButton(onNewGame),
-    );
+    section.append(info, timer, guessForm.form, guessForm.error);
   }
 
   if (state.history.length > 0) {

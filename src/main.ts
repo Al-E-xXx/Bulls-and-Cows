@@ -95,7 +95,7 @@ const render = (): void => {
     settingsForm = createSettingsScreen(gameState.settings, handlePlay);
     main.append(settingsForm);
   } else {
-    main.append(createGameScreen(gameState, handleGuess, handleNewGame));
+    main.append(createGameScreen(gameState, handleGuess));
   }
 };
 
@@ -123,10 +123,10 @@ const handleNewGame = (): void => {
     resetToIdle();
     return;
   }
-  const yes = el('button', 'settings__play', 'Да, новая игра');
+  const yes = el('button', 'modal__primary', 'Да, новая игра');
   yes.type = 'button';
   yes.addEventListener('click', resetToIdle);
-  const no = el('button', 'game__new', 'Отмена');
+  const no = el('button', 'modal__secondary', 'Отмена');
   no.type = 'button';
   no.addEventListener('click', closeModal);
   const actions = el('div', 'modal__actions');
